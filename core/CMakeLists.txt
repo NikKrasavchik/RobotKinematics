@@ -1,6 +1,7 @@
 add_library(robot_core STATIC
     src/Matrix4.cpp
     src/ForwardKinematics.cpp
+    src/RobotModel.cpp
 )
 
 target_include_directories(robot_core
