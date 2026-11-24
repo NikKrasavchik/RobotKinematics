@@ -32,4 +32,6 @@ qt_add_qml_module(robot_app
 
     QML_FILES
         qml/Main.qml
+        qml/JointControl.qml
+        qml/TcpDisplay.qml
 )

@@ -1,139 +1,193 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-
+ 
 ApplicationWindow {
-    id: robot_app
-
+    id: root
+ 
     width: 800
-    height: 600
-
-    minimumWidth: 500
-    minimumHeight: 500
-
+    height: 650
+ 
+    minimumWidth: 600
+    minimumHeight: 580
+ 
     visible: true
+ 
     title: "Robot Kinematics"
-
+    color: "#F1F4F8"
+ 
+    palette.window: "#F1F4F8"
+    palette.base: "#FFFFFF"
+    palette.button: "#FFFFFF"
+    palette.text: "#334155"
+    palette.buttonText: "#334155"
+    palette.windowText: "#334155"
+    palette.highlight: "#4779B5"
+    palette.highlightedText: "#FFFFFF"
+ 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-
-        Label {
-            text: "Robot model"
-            font.pixelSize: 20
-            font.bold: true
-        }
-
-        ComboBox {
+        anchors.margins: 20
+ 
+        spacing: 16
+ 
+        ColumnLayout {
             Layout.fillWidth: true
-
-            model: controller.modelNames
-
-            currentIndex: controller.currentModelIndex
-
-            onActivated: function(index) {
-                controller.selectModel(index)
+ 
+            spacing: 4
+ 
+            Label {
+                text: "Robot Kinematics"
+ 
+                font.pixelSize: 26
+                font.bold: true
+ 
+                color: "#243247"
+            }
+ 
+            Label {
+                text: "Forward kinematics"
+ 
+                font.pixelSize: 13
+ 
+                color: "#64748B"
             }
         }
-
-        Label {
-            text: "Joint angles"
-            font.pixelSize: 20
-            font.bold: true
-        }
-
-        Repeater {
-            model: controller.jointAngles.length
-
-            delegate: RowLayout {
-                id: jointRow
-
-                required property int index
-
-                Layout.fillWidth: true
-                Layout.minimumHeight: 40
-
-                spacing: 12
-
+ 
+        Frame {
+            Layout.fillWidth: true
+ 
+            padding: 16
+ 
+            background: Rectangle {
+                color: "#FFFFFF"
+                radius: 8
+ 
+                border.color: "#DCE3EB"
+            }
+ 
+            RowLayout {
+                anchors.fill: parent
+ 
+                spacing: 16
+ 
                 Label {
-                    text: "Joint " + jointRow.index
-                    Layout.preferredWidth: 60
+                    text: "Robot model"
+ 
+                    font.pixelSize: 15
+                    font.weight: Font.Medium
                 }
-
-                Slider {
-                    id: angleSlider
-
+ 
+                Item {
                     Layout.fillWidth: true
-                    Layout.minimumWidth: 150
-                    Layout.preferredHeight: 40
-
-                    from: -180
-                    to: 180
-                    stepSize: 1
-
-                    value: controller.jointAngles[jointRow.index]
-
-                    onMoved: {
-                        controller.setJointAngle(jointRow.index, angleSlider.value)
+                }
+ 
+                ComboBox {
+                    Layout.preferredWidth: 180
+ 
+                    model: controller.modelNames
+ 
+                    currentIndex: controller.currentModelIndex
+ 
+                    onActivated: function(index) {
+                        controller.selectModel(index)
                     }
                 }
-
-                Label {
-                    text: Number(controller.jointAngles[index]).toFixed(1) + "°"
-
-                    Layout.preferredWidth: 80
-
-                    horizontalAlignment: Text.AlignRight
+            }
+        }
+ 
+        Frame {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+ 
+            padding: 16
+ 
+            background: Rectangle {
+                color: "#FFFFFF"
+                radius: 8
+ 
+                border.color: "#DCE3EB"
+            }
+ 
+            ColumnLayout {
+                anchors.fill: parent
+ 
+                spacing: 8
+ 
+                RowLayout {
+                    Layout.fillWidth: true
+ 
+                    Label {
+                        text: "Joint angles"
+ 
+                        font.pixelSize: 17
+                        font.bold: true
+                    }
+ 
+                    Item {
+                        Layout.fillWidth: true
+                    }
+ 
+                    Label {
+                        text: "Degrees"
+                        color: "#64748B"
+                    }
+                }
+ 
+                Rectangle {
+                    Layout.fillWidth: true
+ 
+                    implicitHeight: 1
+ 
+                    color: "#E2E8F0"
+                }
+ 
+                Repeater {
+                    model: controller.jointAngles.length
+ 
+                    delegate: JointControl {
+                        required property int index
+ 
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+ 
+                        jointIndex: index
+ 
+                        angle: controller.jointAngles[index]
+ 
+                        onAngleEdited: function(newAngle) {
+                            controller.setJointAngle(
+                                index,
+                                newAngle
+                            )
+                        }
+                    }
+                }
+ 
+                Rectangle {
+                    Layout.fillWidth: true
+ 
+                    implicitHeight: 1
+ 
+                    color: "#E2E8F0"
+                }
+ 
+                Button {
+                    text: "Reset angles"
+ 
+                    Layout.alignment: Qt.AlignRight
+ 
+                    onClicked: controller.resetAngles()
                 }
             }
         }
-
-        Button {
-            text: "Reset angles"
+ 
+        TcpDisplay {
             Layout.fillWidth: true
-
-            onClicked: controller.resetAngles()
-        }
-
-        Item {
-            Layout.fillHeight: true
-        }
-
-        Label {
-            text: "TCP coordinates"
-            font.pixelSize: 20
-            font.bold: true
-        }
-
-        GridLayout {
-            columns: 2
-
-            columnSpacing: 24
-            rowSpacing: 8
-
-            Label {
-                text: "X:"
-            }
-
-            Label {
-                text: controller.tcpX.toFixed(6) + " m"
-            }
-
-            Label {
-                text: "Y:"
-            }
-
-            Label {
-                text: controller.tcpY.toFixed(6) + " m"
-            }
-
-            Label {
-                text: "Z:"
-            }
-
-            Label {
-                text: controller.tcpZ.toFixed(6) + " m"
-            }
+ 
+            xValue: controller.tcpX
+            yValue: controller.tcpY
+            zValue: controller.tcpZ
         }
     }
 }
