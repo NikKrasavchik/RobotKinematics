@@ -44,6 +44,23 @@ Matrix4 ForwardKinematics::calculateTransform(const std::vector<DHParameters>& j
     return result;
 }
 
+std::vector<Matrix4> ForwardKinematics::calculateTransforms(const std::vector<DHParameters>& joints)
+{
+    std::vector<Matrix4> transforms;
+    transforms.reserve(joints.size() + 1);
+
+    Matrix4 current = Matrix4::identity();
+    transforms.push_back(current);
+
+    for (const DHParameters& joint : joints)
+    {
+        current = current * calculateDHMatrix(joint);
+        transforms.push_back(current);
+    }
+
+    return transforms;
+}
+
 Vector3 ForwardKinematics::calculateTCP(const std::vector<DHParameters>& joints)
 {
     const Matrix4 transform = calculateTransform(joints);

@@ -17,6 +17,8 @@ class RobotController : public QObject
     Q_PROPERTY(double tcpX READ tcpX NOTIFY tcpChanged);
     Q_PROPERTY(double tcpY READ tcpY NOTIFY tcpChanged);
     Q_PROPERTY(double tcpZ READ tcpZ NOTIFY tcpChanged);
+    Q_PROPERTY(QVariantList framePositions READ framePositions NOTIFY framesChanged);
+    Q_PROPERTY(QVariantList frameRotations READ frameRotations NOTIFY framesChanged);
 
 public:
     explicit RobotController(QObject* parent = nullptr);
@@ -27,6 +29,8 @@ public:
     double tcpX() const {return tcp_.x;}
     double tcpY() const {return tcp_.y;}
     double tcpZ() const {return tcp_.z;}
+    QVariantList framePositions() const {return framePositions_;}
+    QVariantList frameRotations() const {return frameRotations_;}
 
     Q_INVOKABLE void selectModel(int index);
     Q_INVOKABLE void setJointAngle(int index, double degrees);
@@ -36,11 +40,14 @@ signals:
     void modelChanged();
     void jointAnglesChanged();
     void tcpChanged();
+    void framesChanged();
 
 private:
     robot::RobotModel model_;
     robot::Vector3 tcp_;
     int currentModelIndex_ = 0;
+    QVariantList framePositions_;
+    QVariantList frameRotations_;
 
     void recalculate();
 };

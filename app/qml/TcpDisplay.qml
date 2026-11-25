@@ -24,7 +24,7 @@ GroupBox {
         spacing: 12
 
         Label {
-            text: "TCP coordinates"
+            text: "Координаты TCP"
 
             font.pixelSize: 17
             font.bold: true
@@ -60,7 +60,7 @@ GroupBox {
                         spacing: 4
 
                         Label {
-                            text: modelData.axis + " (m)"
+                            text: modelData.axis + " (м)"
 
                             font.pixelSize: 13
 

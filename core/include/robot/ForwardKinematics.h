@@ -13,6 +13,7 @@ class ForwardKinematics
 public:
     static Matrix4 calculateDHMatrix(const DHParameters& dh);
     static Matrix4 calculateTransform(const std::vector<DHParameters>& joints);
+    static std::vector<Matrix4> calculateTransforms(const std::vector<DHParameters>& joints); 
     static Vector3 calculateTCP(const std::vector<DHParameters>& joints);
 };
 }

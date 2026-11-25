@@ -5,6 +5,7 @@ find_package(Qt6 6.8 REQUIRED COMPONENTS
     Quick
     QuickControls2
     QuickLayouts
+    Quick3D
 )
 
 qt_standard_project_setup(REQUIRES 6.8)
@@ -24,6 +25,7 @@ target_link_libraries(robot_app
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::QuickLayouts
+    Qt6::Quick3D
 )
 
 qt_add_qml_module(robot_app
@@ -34,4 +36,8 @@ qt_add_qml_module(robot_app
         qml/Main.qml
         qml/JointControl.qml
         qml/TcpDisplay.qml
+        qml/RobotView.qml
+        qml/RobotLink.qml
+        qml/RobotJoint.qml
+        qml/RobotTcp.qml
 )
